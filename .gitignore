@@ -1,0 +1,8 @@
+# Binary output
+chatgpt-creator
+
+# OS files
+.DS_Store
+
+# Config and Results
+results.txt
