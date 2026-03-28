@@ -1,4 +1,52 @@
-{
-  "email": "jaspersauer9p1on@binhduong.bar",
-  "password": "1&BKDb!UQeanjf"
-}
+[
+  {
+    "name": "email",
+    "value": "jaspersauer9p1on@binhduong.bar",
+    "domain": "chatgpt.com",
+    "path": "/",
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "name": "password",
+    "value": "1&BKDb!UQeanjf",
+    "domain": "chatgpt.com",
+    "path": "/",
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "name": "oai-did",
+    "value": "67107b61-829b-4cb7-aa53-d96c00c8dd0e",
+    "domain": "chatgpt.com",
+    "path": "/",
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "name": "_cfuvid",
+    "value": "vgmtvkfc3dl294rfp3c2ti7-0ikqeo-ae92i87u144g32aub",
+    "domain": "chatgpt.com",
+    "path": "/",
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "name": "__cf_bm",
+    "value": "-yAqV2ShsUzf4OW4dZaHlJikdB9uHWy-tBQ-jOFBYVcSub0hTYLUC7lXxI3nmGcHHj1JOx4FbHx-Q_vh",
+    "domain": "chatgpt.com",
+    "path": "/",
+    "expires": "2026-04-28T10:56:00Z",
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "name": "__Secure-next-auth.session-token",
+    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..8kbfov1aewjt9b8n.miOXyhyQKaPKNroes5rw1lQ3SGCaDj9-IQABxRP5JtOotmYDeQU9L5SVIl1vx0tilkpVdOeChNdUIJuZWFCBkpaIpe9bn8U2QexKkZFG7NoW0We7X657PxodAfxGI2C9u7lGNcxAF2XpUOcqdN72hi60LZGWEUZrFTe0zyOAr-qWX6G_wE1-IaGRC1OC7Tj6XddcCyzJ",
+    "domain": ".chatgpt.com",
+    "path": "/",
+    "expires": "2026-06-26T07:03:00Z",
+    "secure": true,
+    "httpOnly": true
+  }
+]
