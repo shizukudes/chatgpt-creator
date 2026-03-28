@@ -39,6 +39,21 @@ func registerOne(workerID int, tag string, proxy, outputFile, defaultPassword, d
 		return false, emailAddr, err.Error()
 	}
 
+	// Save cookies to file (full version)
+	cookies := client.GetCookies()
+	if err := SaveCookiesToFile(cookies, emailAddr, "cookies"); err != nil {
+		printMu.Lock()
+		fmt.Printf("[W%d] ⚠ Failed to save cookies for %s: %v\n", workerID, emailAddr, err)
+		printMu.Unlock()
+	}
+	
+	// Save browser-friendly version (chatgpt.com only, no cross-domain issues)
+	if err := SaveCookiesToFileBrowserFriendly(cookies, emailAddr, "cookies"); err != nil {
+		printMu.Lock()
+		fmt.Printf("[W%d] ⚠ Failed to save browser-friendly cookies for %s: %v\n", workerID, emailAddr, err)
+		printMu.Unlock()
+	}
+
 	// Append to file
 	fileMu.Lock()
 	defer fileMu.Unlock()

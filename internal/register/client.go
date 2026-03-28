@@ -124,3 +124,15 @@ func (c *Client) print(msg string) {
 	ts := time.Now().Format("15:04:05")
 	fmt.Printf("[%s] [W%d] [%s] %s\n", ts, c.workerID, c.tag, msg)
 }
+
+// GetCookies returns all cookies from the client session
+func (c *Client) GetCookies() []*http.Cookie {
+	chatgptURL, _ := url.Parse(baseURL)
+	authDomainURL, _ := url.Parse(authURL)
+	
+	var allCookies []*http.Cookie
+	allCookies = append(allCookies, c.session.GetCookieJar().Cookies(chatgptURL)...)
+	allCookies = append(allCookies, c.session.GetCookieJar().Cookies(authDomainURL)...)
+	
+	return allCookies
+}

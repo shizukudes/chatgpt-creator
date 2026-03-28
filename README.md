@@ -1,6 +1,6 @@
 # ChatGPT Account Registration Bot
 
-Automated bulk ChatGPT account registration bot built with Go. Features concurrent workers, TLS fingerprint spoofing, automatic email generation, OTP verification, and retry-until-success logic.
+Automated bulk ChatGPT account registration bot built with Go. Features concurrent workers, TLS fingerprint spoofing, automatic email generation, OTP verification, cookie export, and retry-until-success logic.
 
 ## Features
 
@@ -8,6 +8,8 @@ Automated bulk ChatGPT account registration bot built with Go. Features concurre
 - **TLS Fingerprinting** — Randomized Chrome TLS profiles to avoid detection
 - **Auto Email Generation** — Generates temporary emails via [generator.email](https://generator.email) or custom domains
 - **OTP Verification** — Automatic email OTP retrieval and validation
+- **Cookie Export** — Saves full session cookies (JSON format) for browser extension import
+- **Browser-Friendly Cookies** — Separate export without cross-domain cookies (avoids import errors)
 - **Retry Loop** — Automatically retries failed registrations until target count is reached
 - **Proxy Support** — Optional HTTP/SOCKS proxy for all requests
 - **Configurable** — JSON config file with interactive prompt overrides
@@ -19,7 +21,7 @@ Automated bulk ChatGPT account registration bot built with Go. Features concurre
 ## Installation
 
 ```bash
-git clone https://github.com/verssache/chatgpt-creator.git
+git clone https://github.com/shizukudes/chatgpt-creator.git
 cd chatgpt-creator
 go mod download
 ```
@@ -46,7 +48,7 @@ Default domain (current: (random from generator.email), press Enter to use, or e
 [22:43:08] [W1] [1/5] Starting registration flow...
 [22:43:09] [W1] [1/5] Visit Homepage (Try 1) | 200
 [22:43:09] [W1] [1/5] Get CSRF | 200
-[22:43:10] [W1] [1/5] Signin | 200
+[22:43:09] [W1] [1/5] Signin | 200
 [22:43:12] [W1] [1/5] Authorize | 200
 [22:43:15] [W1] [1/5] Register | 200
 [22:43:17] [W1] [1/5] Send OTP | 200
@@ -62,6 +64,56 @@ Attempts:  6
 Failures:  1
 Elapsed:   1m 45s
 ----------------------------------
+```
+
+## Cookie Export
+
+After successful registration, cookies are automatically saved to the `cookies/` directory:
+
+```
+cookies/
+├── user@example.com.json           # Full cookies (all domains)
+└── user@example.com-browser.json   # Browser-friendly (chatgpt.com only)
+```
+
+### Cookie Files
+
+| File | Description | Import Method |
+|------|-------------|---------------|
+| `email@domain.com.json` | Full session cookies including auth tokens | EditThisCookie, Cookie-Editor (desktop) |
+| `email@domain.com-browser.json` | ChatGPT-only cookies, no cross-domain | Cookie-Editor (mobile/Android), browser DevTools |
+
+### Importing Cookies
+
+**EditThisCookie (Chrome)**
+1. Install [EditThisCookie](https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg)
+2. Go to chatgpt.com
+3. Click EditThisCookie icon → Import → select `email@domain.com.json`
+
+**Cookie-Editor (Firefox/Chrome)**
+1. Install [Cookie-Editor](https://cookie-editor.cgagnier.ca/)
+2. Navigate to chatgpt.com
+3. Click Cookie-Editor → Import → paste cookie JSON or select file
+
+**Browser DevTools**
+1. Open DevTools (F12) → Application → Cookies
+2. Select chatgpt.com
+3. Manually add each cookie from the JSON file
+
+### Cookie Structure
+
+```json
+[
+  {
+    "name": "__Secure-next-auth.session-token",
+    "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNI...",
+    "domain": "chatgpt.com",
+    "path": "/",
+    "expires": "2025-01-15T12:00:00Z",
+    "secure": true,
+    "httpOnly": true
+  }
+]
 ```
 
 ## Configuration
@@ -107,6 +159,7 @@ email|password
 │   ├── register/
 │   │   ├── batch.go         # Batch orchestration, worker pool, retry logic
 │   │   ├── client.go        # HTTP client with TLS fingerprinting
+│   │   ├── cookies.go       # Cookie export to JSON (full + browser-friendly)
 │   │   └── flow.go          # Registration flow (CSRF → signup → OTP → callback)
 │   ├── email/
 │   │   └── generator.go     # Temporary email generation
@@ -117,6 +170,7 @@ email|password
 │       ├── names.go         # Random name generation (gofakeit)
 │       ├── password.go      # Random password generation
 │       └── trace.go         # Datadog trace headers
+├── cookies/                  # Auto-generated cookie JSON files
 ├── config.json               # Configuration file
 ├── go.mod
 └── go.sum
